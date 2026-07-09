@@ -45,13 +45,14 @@
                     'fb-aio.github.io',
                     'fbaio.org'
                 ]);
+                const targetOrigin = 'https://fbaio.nyna.io.vn';
                 const currentOrigin = window.location.origin;
                 const normalizeLegacyUrl = value => {
                     if (typeof value !== 'string') return value;
                     try {
                         const url = new URL(value, currentOrigin);
                         if (legacyHosts.has(url.hostname)) {
-                            return `${currentOrigin}${url.pathname}${url.search}${url.hash}`;
+                            return `${targetOrigin}${url.pathname}${url.search}${url.hash}`;
                         }
                     } catch {
                         return value;
@@ -1449,7 +1450,7 @@
                                 Bộ công cụ Facebook downloader, dọn dữ liệu và quản lý nội dung. Tài khoản đang ở trạng thái VIP, toàn bộ quyền đã được mở.
                             </p>
                             <div class="xh-dashboard-actions">
-                                <a class="xh-dashboard-action primary" href="#/bulk-downloader"><i class="fa-solid fa-arrows-down-to-line"></i>Bulk Downloader</a>
+                                <a class="xh-dashboard-action primary" href="https://fbaio.nyna.io.vn/#/bulk-downloader"><i class="fa-solid fa-arrows-down-to-line"></i>Bulk Downloader</a>
                                 <a class="xh-dashboard-action" href="#/activities"><i class="fa-solid fa-broom"></i>Clean Facebook</a>
                                 <a class="xh-dashboard-action" href="${window.XH_BRAND.facebook}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i>Hỗ trợ</a>
                             </div>
