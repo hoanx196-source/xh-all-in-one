@@ -1,6 +1,6 @@
 (() => {
     const resetKey = 'xh-aio-cache-reset-version';
-    const resetVersion = 'bulk-module-20260709-9';
+    const resetVersion = 'bulk-module-20260709-10';
 
     window.addEventListener('load', async () => {
         const needsReload = window.localStorage.getItem(resetKey) !== resetVersion;
