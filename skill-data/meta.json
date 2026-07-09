@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-05-05T08:42:30.319Z",
+  "version": "1.0.0",
+  "formats": {
+    "json": true,
+    "txt": true
+  },
+  "files": [
+    "menus.json",
+    "menus.txt",
+    "features.json",
+    "features.txt",
+    "apis.json",
+    "apis.txt",
+    "meta.json"
+  ]
+}

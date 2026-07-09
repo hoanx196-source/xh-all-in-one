@@ -1,0 +1,9 @@
+/bulk-downloader?platform=Facebook | Facebook Tools | Core Facebook automation, downloader, cleanup, and account tools
+  /bulk-downloader?platform=Facebook | Bulk Downloader | Download Facebook data in bulk
+  /downloader | Downloader | Download media and data
+  /autorun | Automation | Automation workflows for Facebook
+  /activities | Clean Facebook | Clean posts, friends, groups, pages, reels, messages, and activity data
+  /fb-crawler | FB Tools | Search, crawl, account, and page utilities
+/apis | APIs | Core APIs for xH all in one
+  /apis | APIs | Core APIs
+  /logs | Logs | View app logs

@@ -1,0 +1,49 @@
+/features | Search features [NEW] (no-ext)
+/ | Dashboard (no-ext)
+ | Features
+  /vip | VIP 💎 (no-ext)
+  /updates | Updates (no-ext)
+  /coming-soon | Coming soon (no-ext)
+  /comparison | Comparison (no-ext)
+/bulk-downloader | Bulk Downloader [HOT]
+/downloader | Downloader
+ | Automation
+  /autorun | AutoRun [HOT]
+  /auto/comment | Comment [NEW]
+  /auto-post-fb | Auto Post [WIP]
+  /apis | APIs [NEW]
+  /n8n | N8N [WIP]
+ | Clean Facebook
+  /activities | Activities [NEW]
+  /posts | Posts [HOT]
+  /friends | Friends [HOT]
+  /stories | Stories
+  /friend-requests | Friend requests
+  /follows | Following
+  /groups | Groups
+  /pages | Pages
+  /messages/all | Messages
+  /delete-messages | Delete messages [WIP]
+  /messages/first | First messages
+  /reels | Reels
+  /blocked | Blocked
+ | FB Tools
+  /fb-crawler | Crawl [WIP]
+  /search-fb-pages | Search pages [NEW]
+  /search-fb-posts | Search posts
+  /search-fb-accounts | Search accounts
+  /notes | Notes [NEW]
+  /fb-avatar-shield | Avatar Shield
+  /hide-profile-sections | Hide profile
+  /get-access-token | Access token
+  /shortcuts | Shortcuts (no-ext)
+ | Help
+  /FAQ | FAQ (no-ext)
+  /tutorial | Tutorial (no-ext)
+  /support | Support [HOT] (no-ext)
+  /donate | Donate [LOVE] (no-ext)
+  /logs | Logs (no-ext)
+  /storage-manager | Storage
+  /hard-refresh | Hard Refresh (no-ext)
+  /source-code | Source code (no-ext)
+  /settings | Settings [NEW]

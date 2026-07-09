@@ -1,0 +1,351 @@
+{
+  "updatedAt": "2026-06-29T01:37:08.856Z",
+  "items": [
+    {
+      "label": "Search features",
+      "path": "/features",
+      "icon": "fa-solid fa-search fa-lg",
+      "badge": "NEW",
+      "dontNeedExt": true
+    },
+    {
+      "divider": true
+    },
+    {
+      "label": "Dashboard",
+      "path": "/",
+      "icon": "fa-solid fa-house fa-lg",
+      "dontNeedExt": true
+    },
+    {
+      "label": "Features",
+      "icon": "fa-solid fa-puzzle-piece fa-lg",
+      "children": [
+        {
+          "label": "VIP 💎",
+          "path": "/vip",
+          "icon": "fa-solid fa-crown",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Updates",
+          "path": "/updates",
+          "icon": "fa-solid fa-circle-up",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Coming soon",
+          "path": "/coming-soon",
+          "icon": "fa-solid fa-hourglass-half",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Comparison",
+          "path": "/comparison",
+          "icon": "fa-solid fa-scale-balanced",
+          "dontNeedExt": true
+        }
+      ]
+    },
+    {
+      "divider": true
+    },
+    {
+      "label": "Bulk Downloader",
+      "path": "/bulk-downloader",
+      "icon": "fa-solid fa-arrows-down-to-line fa-lg fa-bounce",
+      "badge": "HOT"
+    },
+    {
+      "label": "Downloader",
+      "path": "/downloader",
+      "icon": "fa-solid fa-arrow-down fa-lg"
+    },
+    {
+      "divider": true
+    },
+    {
+      "label": "Automation",
+      "icon": "fa-solid fa-robot fa-lg",
+      "children": [
+        {
+          "label": "AutoRun",
+          "path": "/autorun",
+          "icon": "fa-solid fa-play",
+          "badge": "HOT"
+        },
+        {
+          "label": "Comment",
+          "path": "/auto/comment",
+          "icon": "fa-solid fa-comment",
+          "badge": "NEW"
+        },
+        {
+          "label": "Auto Post",
+          "path": "/auto-post-fb",
+          "icon": "fa-solid fa-newspaper",
+          "badge": "WIP"
+        },
+        {
+          "label": "APIs",
+          "path": "/apis",
+          "icon": "fa-solid fa-plug",
+          "badge": "NEW"
+        },
+        {
+          "label": "N8N",
+          "path": "/n8n",
+          "icon": "fa-solid fa-diagram-project",
+          "badge": "WIP"
+        }
+      ]
+    },
+    {
+      "label": "Clean Facebook",
+      "icon": "fa-solid fa-broom fa-lg",
+      "children": [
+        {
+          "label": "Activities",
+          "path": "/activities",
+          "icon": "fa-solid fa-clock-rotate-left",
+          "badge": "NEW"
+        },
+        {
+          "label": "Posts",
+          "path": "/posts",
+          "icon": "fa-solid fa-newspaper",
+          "badge": "HOT"
+        },
+        {
+          "label": "Friends",
+          "path": "/friends",
+          "icon": "fa-solid fa-users",
+          "badge": "HOT"
+        },
+        {
+          "divider": true
+        },
+        {
+          "label": "Stories",
+          "path": "/stories",
+          "icon": "fa-solid fa-heart"
+        },
+        {
+          "label": "Friend requests",
+          "path": "/friend-requests",
+          "icon": "fa-solid fa-user-plus"
+        },
+        {
+          "label": "Following",
+          "path": "/follows",
+          "icon": "fa-solid fa-person-walking-arrow-right"
+        },
+        {
+          "label": "Groups",
+          "path": "/groups",
+          "icon": "fa-solid fa-users-line"
+        },
+        {
+          "label": "Pages",
+          "path": "/pages",
+          "icon": "fa-solid fa-flag"
+        },
+        {
+          "divider": true
+        },
+        {
+          "label": "Messages",
+          "path": "/messages/all",
+          "icon": "fa-solid fa-comments"
+        },
+        {
+          "label": "Delete messages",
+          "path": "/delete-messages",
+          "icon": "fa-solid fa-comment-slash",
+          "badge": "WIP"
+        },
+        {
+          "label": "First messages",
+          "path": "/messages/first",
+          "icon": "fa-solid fa-clock-rotate-left"
+        },
+        {
+          "divider": true
+        },
+        {
+          "label": "Reels",
+          "path": "/reels",
+          "icon": "fa-solid fa-film"
+        },
+        {
+          "label": "Blocked",
+          "path": "/blocked",
+          "icon": "fa-solid fa-ban"
+        }
+      ]
+    },
+    {
+      "label": "FB Tools",
+      "icon": "fa-brands fa-facebook fa-lg",
+      "children": [
+        {
+          "label": "Crawl",
+          "path": "/fb-crawler",
+          "icon": "fa-solid fa-database",
+          "badge": "WIP"
+        },
+        {
+          "label": "Search pages",
+          "path": "/search-fb-pages",
+          "icon": "fa-solid fa-flag",
+          "badge": "NEW"
+        },
+        {
+          "label": "Search posts",
+          "path": "/search-fb-posts",
+          "icon": "fa-solid fa-newspaper"
+        },
+        {
+          "label": "Search accounts",
+          "path": "/search-fb-accounts",
+          "icon": "fa-solid fa-user"
+        },
+        {
+          "divider": true
+        },
+        {
+          "label": "Notes",
+          "path": "/notes",
+          "icon": "fa-solid fa-note-sticky",
+          "badge": "NEW"
+        },
+        {
+          "label": "Avatar Shield",
+          "path": "/fb-avatar-shield",
+          "icon": "fa-solid fa-shield-halved"
+        },
+        {
+          "label": "Hide profile",
+          "path": "/hide-profile-sections",
+          "icon": "fa-solid fa-eye-slash"
+        },
+        {
+          "divider": true
+        },
+        {
+          "label": "Access token",
+          "path": "/get-access-token",
+          "icon": "fa-solid fa-key"
+        },
+        {
+          "label": "Shortcuts",
+          "path": "/shortcuts",
+          "icon": "fa-solid fa-link",
+          "dontNeedExt": true
+        }
+      ]
+    },
+    {
+      "label": "Downloader",
+      "icon": "fa-solid fa-arrow-down",
+      "hidden": true,
+      "children": [
+        {
+          "label": "Video down",
+          "path": "/video-downloader",
+          "icon": "fa-solid fa-film",
+          "badge": "HOT"
+        },
+        {
+          "label": "Document down",
+          "path": "/doc-downloader",
+          "icon": "fa-solid fa-book",
+          "badge": "NEW"
+        }
+      ]
+    },
+    {
+      "divider": true
+    },
+    {
+      "label": "Help",
+      "icon": "fa-solid fa-life-ring fa-lg",
+      "children": [
+        {
+          "label": "FAQ",
+          "path": "/FAQ",
+          "icon": "fa-solid fa-circle-question fa-lg",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Tutorial",
+          "path": "/tutorial",
+          "icon": "fa-solid fa-book",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Support",
+          "path": "/support",
+          "icon": "fa-solid fa-headset fa-lg",
+          "badge": "HOT",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Donate",
+          "path": "/donate",
+          "icon": "fa-solid fa-heart",
+          "badge": "LOVE",
+          "dontNeedExt": true
+        },
+        {
+          "divider": true
+        },
+        {
+          "label": "Logs",
+          "path": "/logs",
+          "icon": "fa-solid fa-file-lines fa-lg",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Storage",
+          "path": "/storage-manager",
+          "icon": "fa-solid fa-database"
+        },
+        {
+          "label": "Hard Refresh",
+          "path": "/hard-refresh",
+          "icon": "fa-solid fa-refresh",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Source code",
+          "path": "/source-code",
+          "icon": "fa-solid fa-code",
+          "dontNeedExt": true
+        },
+        {
+          "label": "Settings",
+          "path": "/settings",
+          "icon": "fa-solid fa-gear",
+          "badge": "NEW"
+        }
+      ]
+    },
+    {
+      "label": "Hidden",
+      "icon": "fa-solid fa-eye fa-lg",
+      "hidden": true,
+      "children": [
+        {
+          "path": "/ext-updated"
+        },
+        {
+          "path": "/disclaimer"
+        },
+        {
+          "path": "/dev"
+        }
+      ]
+    }
+  ]
+}
