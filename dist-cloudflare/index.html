@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- cache control -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+
+        <!-- description -->
+        <meta
+            name="description"
+            content="xH all in one: All in one toolbox for social media management"
+        />
+
+        <title>xH all in one</title>
+
+        <link rel="icon" href="./icon.svg" />
+        <link rel="apple-touch-icon" href="./icon-192.png" sizes="180x180" />
+        <link rel="mask-icon" href="./icon.svg" color="#333333" />
+        <meta name="theme-color" content="#333333" />
+
+        <script>
+            (() => {
+                const legacyHosts = new Set([
+                    'fbxh-all-in-one.org',
+                    'xh-all-in-one.org',
+                    'fb-aio.github.io',
+                    'fbaio.org',
+                    'fbaio.nyna.io.vn',
+                    'facebook-all-in-one.com',
+                    'www.facebook-all-in-one.com'
+                ]);
+                const targetOrigin = 'https://xh.nyna.io.vn';
+                const currentOrigin = window.location.origin;
+                const normalizeLegacyUrl = value => {
+                    if (typeof value !== 'string') return value;
+                    try {
+                        const url = new URL(value, currentOrigin);
+                        if (legacyHosts.has(url.hostname)) {
+                            return `${targetOrigin}${url.pathname}${url.search}${url.hash}`;
+                        }
+                    } catch {
+                        return value;
+                    }
+                    return value;
+                };
+                const originalAssign = window.location.assign.bind(window.location);
+                const originalReplace = window.location.replace.bind(window.location);
+                const originalOpen = window.open.bind(window);
+                window.location.assign = value => originalAssign(normalizeLegacyUrl(value));
+                window.location.replace = value => originalReplace(normalizeLegacyUrl(value));
+                window.open = (value, ...args) => originalOpen(normalizeLegacyUrl(value), ...args);
+                document.addEventListener(
+                    'click',
+                    event => {
+                        const anchor = event.target?.closest?.('a[href]');
+                        if (!anchor) return;
+                        const href = anchor.getAttribute('href') || '';
+                        const normalizedHref = normalizeLegacyUrl(href);
+                        if (!normalizedHref || normalizedHref === href) return;
+                        event.preventDefault();
+                        anchor.setAttribute('href', normalizedHref);
+                        if (anchor.target === '_blank') {
+                            window.open(normalizedHref, anchor.target, anchor.rel || undefined);
+                            return;
+                        }
+                        window.location.href = normalizedHref;
+                    },
+                    true
+                );
+                window.addEventListener(
+                    'beforeunload',
+                    event => {
+                        const nextUrl = normalizeLegacyUrl(document.activeElement?.href || '');
+                        if (nextUrl && nextUrl !== document.activeElement?.href) {
+                            event.preventDefault();
+                            window.location.href = nextUrl;
+                        }
+                    },
+                    { capture: true }
+                );
+            })();
+        </script>
+
+        <link
+            rel="preload"
+            href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+            as="style"
+            onload="this.onload=null;this.rel='stylesheet'"
+        />
+        <noscript>
+            <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+            />
+        </noscript>
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0MQRTEC81L"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', 'G-0MQRTEC81L');
+        </script>
+
+        <!-- Cloudflare Web Analytics - Single token for all domains -->
+        <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon='{"token": "5dc12585eeb74ce08ce642906ba466ee"}'
+        ></script>
+        <!-- End Cloudflare Web Analytics -->
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+            /* fix swal */
+
+            html body.swal2-height-auto {
+                height: 100vh !important;
+                width: 100vw !important;
+            }
+
+            body {
+                background-color: #333;
+                font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            ._init_loading {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                height: 100vh;
+                width: 100vw;
+                margin: 0;
+                padding: 0;
+                color: #999;
+            }
+
+            ._hard_refresh_btn {
+                padding: 8px 12px;
+                font-size: 14px;
+                color: #eee;
+                background-color: #1677ff;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            ._hard_refresh_btn:hover {
+                background-color: #40a9ff;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+            }
+
+            ._hard_refresh_btn:active {
+                transform: translateY(0);
+            }
+
+            ._hard_refresh_btn i {
+                margin-right: 8px;
+            }
+
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            ._recovery_container {
+                display: none;
+                margin-top: 20px;
+                padding: 24px;
+                max-width: 500px;
+                background-color: rgba(255, 255, 255, 0.05);
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                animation: slideInUp 0.5s ease-out forwards;
+            }
+
+            ._recovery_title {
+                margin-bottom: 16px;
+                font-size: 18px;
+                font-weight: 600;
+                color: #d64343;
+                text-align: center;
+            }
+
+            ._backup_urls {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            ._backup_urls_title {
+                margin-bottom: 12px;
+                font-size: 15px;
+                font-weight: 500;
+                color: #d66543;
+                text-align: center;
+            }
+
+            ._backup_urls_list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            ._backup_urls_list li {
+                margin-bottom: 8px;
+            }
+
+            ._backup_urls_list a {
+                display: block;
+                padding: 10px 16px;
+                color: #add7ff;
+                text-decoration: none;
+                background-color: rgba(24, 144, 255, 0.1);
+                border-radius: 4px;
+                transition: all 0.3s;
+                font-size: 14px;
+            }
+
+            ._backup_urls_list a:hover {
+                background-color: rgba(24, 144, 255, 0.2);
+                transform: translateX(4px) scale(1.1);
+            }
+
+            ._backup_urls_list i {
+                margin-right: 8px;
+            }
+
+            :root {
+                --xh-bg: #061112;
+                --xh-panel: #0d1b1d;
+                --xh-panel-soft: rgba(13, 27, 29, 0.82);
+                --xh-border: rgba(134, 183, 128, 0.2);
+                --xh-teal: #16869a;
+                --xh-teal-bright: #25a9bb;
+                --xh-green: #8ab77a;
+                --xh-green-bright: #a9d791;
+                --xh-text: #eef8f4;
+                --xh-muted: #9fb7b1;
+            }
+
+            body {
+                background:
+                    radial-gradient(circle at top left, rgba(37, 169, 187, 0.16), transparent 28rem),
+                    linear-gradient(135deg, #061112 0%, #081515 48%, #0c1713 100%) !important;
+                color: var(--xh-text);
+            }
+
+            body.xh-light-mode {
+                --xh-bg: #f4fbf8;
+                --xh-panel: #ffffff;
+                --xh-panel-soft: rgba(255, 255, 255, 0.88);
+                --xh-border: rgba(24, 134, 154, 0.2);
+                --xh-text: #102124;
+                --xh-muted: #50656a;
+                background:
+                    radial-gradient(circle at top left, rgba(37, 169, 187, 0.18), transparent 28rem),
+                    linear-gradient(135deg, #f5fffc 0%, #eef8f2 48%, #f8fbff 100%) !important;
+                color: var(--xh-text);
+            }
+
+            #root,
+            .ant-layout,
+            .ant-layout-content,
+            .ant-layout-sider,
+            .ant-menu,
+            .ant-menu-sub,
+            .ant-card,
+            .ant-modal-content,
+            .ant-drawer-content {
+                background-color: transparent !important;
+            }
+
+            .ant-layout-sider,
+            aside {
+                background: linear-gradient(180deg, #071b20 0%, #081514 100%) !important;
+                border-right: 1px solid var(--xh-border) !important;
+            }
+
+            body.xh-light-mode .ant-layout-sider,
+            body.xh-light-mode aside {
+                background: linear-gradient(180deg, #e9fbf7 0%, #f6fff9 100%) !important;
+                color: var(--xh-text) !important;
+            }
+
+            body.xh-light-mode .ant-menu,
+            body.xh-light-mode .ant-menu-sub,
+            body.xh-light-mode .ant-card,
+            body.xh-light-mode .ant-table,
+            body.xh-light-mode .ant-modal-content,
+            body.xh-light-mode .ant-drawer-content {
+                color: var(--xh-text) !important;
+            }
+
+            .ant-menu-item-selected,
+            .ant-menu-submenu-selected > .ant-menu-submenu-title {
+                background: linear-gradient(135deg, var(--xh-teal), #3c8f77) !important;
+                color: #fff !important;
+            }
+
+            .ant-btn-primary,
+            button[type='submit'] {
+                background: linear-gradient(135deg, var(--xh-teal-bright), var(--xh-green)) !important;
+                border-color: transparent !important;
+                box-shadow: 0 10px 28px rgba(37, 169, 187, 0.18) !important;
+            }
+
+            .ant-tag,
+            .ant-badge-count {
+                border-color: rgba(169, 215, 145, 0.4) !important;
+            }
+
+            .xh-hidden-module,
+            .xh-hidden-section,
+            .xh-hidden-announcement {
+                display: none !important;
+            }
+
+            .ant-menu-item[title='Tính năng'],
+            .ant-menu-item[title='Tự động hoá'],
+            .ant-menu-item[title='Tự động hóa'],
+            .ant-menu-item[title='Trò chơi'],
+            .ant-menu-submenu[title='Tính năng'],
+            .ant-menu-submenu[title='Tự động hoá'],
+            .ant-menu-submenu[title='Tự động hóa'],
+            .ant-menu-submenu[title='Trò chơi'],
+            .ant-menu-item:has(a[href*='#/features']),
+            .ant-menu-item:has(a[href*='#/autorun']),
+            .ant-menu-item:has(a[href*='#/auto/comment']),
+            .ant-menu-item:has(a[href*='#/auto-post-fb']),
+            .ant-menu-item:has(a[href*='#/apis']),
+            .ant-menu-item:has(a[href*='#/n8n']),
+            .ant-menu-item:has(a[href*='#/it-tools']),
+            .ant-menu-item:has(a[href*='#/online-tools']),
+            .ant-menu-item:has(a[href*='#/wheel-of-names']),
+            .ant-menu-item:has(a[href*='#/duckrace']),
+            .ant-menu-submenu:has(a[href*='#/features']),
+            .ant-menu-submenu:has(a[href*='#/autorun']),
+            .ant-menu-submenu:has(a[href*='#/auto/comment']),
+            .ant-menu-submenu:has(a[href*='#/auto-post-fb']),
+            .ant-menu-submenu:has(a[href*='#/apis']),
+            .ant-menu-submenu:has(a[href*='#/n8n']),
+            .ant-menu-submenu:has(a[href*='#/it-tools']),
+            .ant-menu-submenu:has(a[href*='#/online-tools']),
+            .ant-menu-submenu:has(a[href*='#/wheel-of-names']),
+            .ant-menu-submenu:has(a[href*='#/duckrace']) {
+                display: none !important;
+            }
+
+            .xh-dashboard-clean > :not(.xh-dashboard-shell) {
+                display: none !important;
+            }
+
+            .xh-vip-pill {
+                position: fixed;
+                top: 18px;
+                right: 22px;
+                z-index: 1200;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                border: 1px solid rgba(169, 215, 145, 0.38);
+                border-radius: 999px;
+                color: #effff4;
+                background: rgba(10, 27, 25, 0.76);
+                box-shadow: 0 14px 38px rgba(0, 0, 0, 0.28);
+                backdrop-filter: blur(12px);
+                font-size: 13px;
+                font-weight: 650;
+            }
+
+            .xh-dashboard-shell {
+                max-width: 1180px;
+                margin: 0 auto;
+                padding: 24px;
+            }
+
+            .xh-dashboard-hero {
+                display: grid;
+                grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
+                gap: 28px;
+                align-items: center;
+                margin: 18px auto 22px;
+                padding: 28px;
+                border: 1px solid var(--xh-border);
+                border-radius: 8px;
+                background:
+                    linear-gradient(135deg, rgba(22, 134, 154, 0.2), rgba(138, 183, 122, 0.12)),
+                    rgba(6, 17, 18, 0.72);
+                box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+            }
+
+            .xh-dashboard-logo {
+                width: 100%;
+                max-width: 230px;
+                aspect-ratio: 1;
+                object-fit: contain;
+                justify-self: center;
+                filter: drop-shadow(0 16px 36px rgba(22, 134, 154, 0.28));
+            }
+
+            .xh-dashboard-title {
+                margin: 0 0 8px;
+                color: var(--xh-text);
+                font-size: 34px;
+                line-height: 1.1;
+                font-weight: 800;
+            }
+
+            .xh-dashboard-copy {
+                max-width: 720px;
+                margin: 0 0 18px;
+                color: var(--xh-muted);
+                font-size: 15px;
+                line-height: 1.65;
+            }
+
+            .xh-dashboard-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .xh-dashboard-action {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 36px;
+                padding: 8px 12px;
+                border: 1px solid rgba(169, 215, 145, 0.26);
+                border-radius: 6px;
+                color: #f4fff7;
+                background: rgba(255, 255, 255, 0.055);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 650;
+            }
+
+            .xh-dashboard-action.primary {
+                background: linear-gradient(135deg, var(--xh-teal), var(--xh-green));
+                border-color: transparent;
+            }
+
+            @media (max-width: 760px) {
+                .xh-vip-pill {
+                    top: auto;
+                    right: 14px;
+                    bottom: 14px;
+                }
+
+                .xh-dashboard-shell {
+                    padding: 14px;
+                }
+
+                .xh-dashboard-hero {
+                    grid-template-columns: 1fr;
+                    padding: 20px;
+                    text-align: center;
+                }
+
+                .xh-dashboard-logo {
+                    max-width: 150px;
+                }
+
+                .xh-dashboard-title {
+                    font-size: 26px;
+                }
+
+                .xh-dashboard-actions {
+                    justify-content: center;
+                }
+            }
+        </style>
+      <script type="module" crossorigin src="./src/ZQcttVra.js?v=rollback-20260710-1"></script>
+      <link rel="modulepreload" crossorigin href="./libs/Co2HKlK5.js">
+      <link rel="modulepreload" crossorigin href="./libs/BqUCZHEx.js">
+      <link rel="modulepreload" crossorigin href="./libs/B3ZIOLOa.js">
+      <link rel="modulepreload" crossorigin href="./libs/DhsIdmQp.js">
+      <link rel="modulepreload" crossorigin href="./libs/DuHg4J4c.js">
+      <link rel="modulepreload" crossorigin href="./libs/Bybc6IDZ.js">
+      <link rel="modulepreload" crossorigin href="./libs/CSK2b5lq.js">
+      <link rel="modulepreload" crossorigin href="./libs/n07fjk2x.js">
+      <link rel="modulepreload" crossorigin href="./libs/C4hGMFlw.js">
+      <link rel="modulepreload" crossorigin href="./libs/BE31ACpJ.js">
+      <link rel="modulepreload" crossorigin href="./libs/l8gDnGEN.js">
+      <link rel="modulepreload" crossorigin href="./libs/CWL1kuGj.js">
+      <link rel="modulepreload" crossorigin href="./libs/DK5M_MIM.js">
+      <link rel="modulepreload" crossorigin href="./libs/DmPgwrv7.js">
+      <link rel="modulepreload" crossorigin href="./libs/D61fuREp.js">
+      <link rel="modulepreload" crossorigin href="./libs/CzGuHLZU.js">
+      <link rel="modulepreload" crossorigin href="./libs/BIU5KoPJ.js">
+      <link rel="modulepreload" crossorigin href="./libs/BluuNl1P.js">
+      <link rel="modulepreload" crossorigin href="./libs/ColXTbGM.js">
+      <link rel="modulepreload" crossorigin href="./libs/DTDsQhSM.js">
+      <link rel="modulepreload" crossorigin href="./libs/CnpWwVev.js">
+      <link rel="modulepreload" crossorigin href="./libs/JZujZh86.js">
+      <link rel="modulepreload" crossorigin href="./libs/CU5sI_3c.js">
+      <link rel="modulepreload" crossorigin href="./libs/BffhCx7u.js">
+      <link rel="modulepreload" crossorigin href="./libs/DLDTgr_C.js">
+      <link rel="modulepreload" crossorigin href="./libs/DmgVapPD.js">
+      <link rel="modulepreload" crossorigin href="./libs/CRFHhq_P.js">
+      <link rel="modulepreload" crossorigin href="./libs/CDMfcvTV.js">
+      <link rel="modulepreload" crossorigin href="./libs/DrpYy98G.js">
+      <link rel="modulepreload" crossorigin href="./libs/CxcLc7th.js">
+      <link rel="modulepreload" crossorigin href="./libs/CWa7yFn9.js">
+      <link rel="modulepreload" crossorigin href="./libs/B2J3glpe.js">
+      <link rel="modulepreload" crossorigin href="./libs/CvsRyX7-.js">
+      <link rel="modulepreload" crossorigin href="./libs/b-dkYkEG.js">
+      <link rel="modulepreload" crossorigin href="./libs/DR59TEpU.js">
+      <link rel="modulepreload" crossorigin href="./libs/DgDJsmEv.js">
+      <link rel="modulepreload" crossorigin href="./libs/Cvy-CkqJ.js">
+      <link rel="modulepreload" crossorigin href="./libs/CJO_VmWQ.js">
+      <link rel="modulepreload" crossorigin href="./libs/YNvkqiXV.js">
+      <link rel="modulepreload" crossorigin href="./libs/5kvZFJB6.js">
+      <link rel="modulepreload" crossorigin href="./libs/Cfyw3hb3.js">
+      <link rel="modulepreload" crossorigin href="./libs/CoBwoZgV.js">
+      <link rel="modulepreload" crossorigin href="./libs/DkOYV98o.js">
+      <link rel="modulepreload" crossorigin href="./libs/ZXNy00fQ.js">
+      <link rel="modulepreload" crossorigin href="./libs/DAZ6PoEj.js">
+      <link rel="modulepreload" crossorigin href="./libs/BItmO88T.js">
+      <link rel="modulepreload" crossorigin href="./libs/CqYlUzNW.js">
+      <link rel="modulepreload" crossorigin href="./libs/BGI_J7Q9.js">
+      <link rel="modulepreload" crossorigin href="./libs/vFDf7YUz.js">
+      <link rel="modulepreload" crossorigin href="./libs/D0GDSQFO.js">
+      <link rel="modulepreload" crossorigin href="./libs/D-Xv5lRT.js">
+      <link rel="modulepreload" crossorigin href="./libs/DilEKjB0.js">
+      <link rel="modulepreload" crossorigin href="./libs/CIGnqMJC.js">
+      <link rel="modulepreload" crossorigin href="./libs/4wMxLH4D.js">
+      <link rel="modulepreload" crossorigin href="./libs/w9OM8Bxz.js">
+      <link rel="modulepreload" crossorigin href="./libs/Dx4NSa2j.js">
+      <link rel="modulepreload" crossorigin href="./libs/DUsDmMsR.js">
+      <link rel="modulepreload" crossorigin href="./libs/UFIvIGhN.js">
+      <link rel="modulepreload" crossorigin href="./libs/CubgzPhQ.js">
+      <link rel="modulepreload" crossorigin href="./libs/C1kwXO7X.js">
+      <link rel="modulepreload" crossorigin href="./libs/BJyhU_bO.js">
+      <link rel="modulepreload" crossorigin href="./libs/C13klpjb.js">
+      <link rel="modulepreload" crossorigin href="./libs/yJGO6Amu.js">
+      <link rel="modulepreload" crossorigin href="./libs/Yp-2ZFTc.js">
+      <link rel="modulepreload" crossorigin href="./libs/pKXmQXW3.js">
+      <link rel="stylesheet" crossorigin href="./assets/style-CWv7CwdX.css">
+    <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js?v=rollback-20260710-1"></script></head>
+
+    <body style="margin: 0; padding: 0">
+        <!--[if IE]>
+            <p class="browserupgrade">
+                You are using an <strong>outdated</strong> browser. Please
+                <a href="https://browsehappy.com/">upgrade your browser</a> to improve your
+                experience and security.
+            </p>
+        <![endif]-->
+
+        <div id="root" style="margin: 0; padding: 0">
+            <div class="_init_loading">
+                <h1>🚀 Getting ready...</h1>
+                <div class="_recovery_container" id="recoveryContainer">
+                    <div class="_recovery_title">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        Loading Too Long?
+                    </div>
+
+                    Clear cache and reload:
+                    <button class="_hard_refresh_btn" id="hardRefreshBtn">
+                        <i class="fa-solid fa-rotate"></i>
+                        Hard Refresh
+                    </button>
+                    <div class="_backup_urls">
+                        <div class="_backup_urls_title">Still loading? Try these backup:</div>
+                        <ul class="_backup_urls_list" id="backupUrlsList">
+                            <!-- Backup URLs will be inserted here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            window.XH_BRAND = {
+                name: 'xH all in one',
+                author: 'Xuân Hoà',
+                phone: '0833680707',
+                facebook: 'https://fb.com/nxh1811',
+                zalo: 'https://zalo.me/0833680707',
+                logo: './assets/logo-BgUNo_GL.png'
+            };
+
+            window.XH_ALLOWED_PATHS = new Set([
+                '/',
+                '/vip',
+                '/updates',
+                '/coming-soon',
+                '/comparison',
+                '/bulk-downloader',
+                '/downloader',
+                '/zalo',
+                '/zalo-tools',
+                '/activities',
+                '/posts',
+                '/friends',
+                '/stories',
+                '/friend-requests',
+                '/follows',
+                '/groups',
+                '/pages',
+                '/messages/all',
+                '/delete-messages',
+                '/messages/first',
+                '/reels',
+                '/blocked',
+                '/fb-crawler',
+                '/search-fb-pages',
+                '/search-fb-posts',
+                '/search-fb-accounts',
+                '/notes',
+                '/fb-avatar-shield',
+                '/hide-profile-sections',
+                '/get-access-token',
+                '/json-to-excel',
+                '/shortcuts',
+                '/settings',
+                '/ext-updated'
+            ]);
+
+            window.XH_REMOVED_PATTERNS = [
+                /pricing/i,
+                /price/i,
+                /features?/i,
+                /checkout/i,
+                /satisfied\s+customers/i,
+                /reviews?/i,
+                /youtube\s+tools?/i,
+                /other\s+products?/i,
+                /osint\s+tools?/i,
+                /\bosint\b/i,
+                /\bgames?\b/i,
+                /wheelofnames/i,
+                /duckrace/i,
+                /aurora\s+os/i,
+                /\bautomation\b/i,
+                /\bautorun\b/i,
+                /^apis?$/i,
+                /^n8n$/i,
+                /\bwin\s*(11|10|xp|98|96)\b/i,
+                /youtube/i
+            ];
+
+            window.XH_REMOVED_LABELS = new Set([
+                'tinh nang',
+                'features',
+                'tu dong hoa',
+                'automation',
+                'tu chay',
+                'autorun',
+                'dang bai',
+                'apis',
+                'api',
+                'n8n',
+                'tro choi',
+                'games',
+                'pricing',
+                'bang gia'
+            ]);
+
+            window.XH_HELP_LABELS = new Set(['tro giup', 'help']);
+            window.XH_SETTINGS_LABELS = new Set(['cai dat', 'settings']);
+
+            window.XH_REMOVED_PATHS = [
+                '/features',
+                '/checkout',
+                '/products',
+                '/youtube-subs',
+                '/search',
+                '/autorun',
+                '/auto/comment',
+                '/auto-post-fb',
+                '/apis',
+                '/n8n',
+                '/FAQ',
+                '/faq',
+                '/tutorial',
+                '/support',
+                '/logs',
+                '/storage-manager',
+                '/hard-refresh',
+                '/disclaimer',
+                '/source-code',
+                '/donate',
+                '/ip-info',
+                '/ip-location',
+                '/github-osint',
+                '/cheat-sheets',
+                '/metaosint',
+                '/osint-sources',
+                '/webcheck',
+                '/map',
+                '/tip',
+                '/json-crack',
+                '/md-to-word',
+                '/md-editor',
+                '/pixel-diff',
+                '/invisible-text',
+                '/web-timer',
+                '/it-tools',
+                '/online-tools',
+                '/notes',
+                '/shortcuts',
+                '/source',
+                '/cyberchef',
+                '/webcrack',
+                '/de4js',
+                '/deobfjs',
+                '/thiings',
+                '/simple-icons',
+                '/iconify',
+                '/emojidb',
+                '/cheatsh',
+                '/store/unlock',
+                '/store/accounts',
+                '/useful-scripts',
+                '/wheel-of-names',
+                '/duckrace',
+                '/aurora-os',
+                '/win11',
+                '/win10',
+                '/winXP',
+                '/win98',
+                '/win96',
+                '/lol2d',
+                '/pong-retro',
+                '/hyper-pong',
+                '/jump-king',
+                '/sandboxels',
+                '/mandelbrot',
+                '/webgl-fluid',
+                '/internet-map',
+                '/nasa-solar',
+                '/solar-system',
+                '/multiverse'
+            ];
+
+            window.XH_VIP_STATE = {
+                active: true,
+                isVip: true,
+                isVIP: true,
+                vip: true,
+                premium: true,
+                pro: true,
+                plan: 'vip',
+                tier: 'vip',
+                role: 'vip',
+                status: 'active',
+                permissions: ['*'],
+                features: ['*'],
+                expiresAt: '2099-12-31T23:59:59.999Z',
+                expiredAt: '2099-12-31T23:59:59.999Z',
+                vipExpiredAt: '2099-12-31T23:59:59.999Z',
+                expires: 4102444799999,
+                expiredTime: 4102444799999,
+                expireTime: 4102444799999,
+                vipExpiredTime: 4102444799999,
+                vipExpireTime: 4102444799999,
+                BEVIPExpiredTime: 4102444799999
+            };
+
+            window.XH_VIP_PROFILE = {
+                id: 'nxh1811',
+                uid: 'nxh1811',
+                fbUid: '10000070356',
+                name: 'Xuan Hoa Nguyen',
+                displayName: 'Xuân Hoà',
+                username: 'nxh1811',
+                email: '',
+                ...window.XH_VIP_STATE
+            };
+
+            window.applyXHBranding = function applyXHBranding() {
+                const oldFb = 'F' + 'B';
+                const oldTool = 'A' + 'IO';
+                const oldCompact = 'f' + 'ba' + 'io';
+                const oldHyphen = 'f' + 'b-a' + 'io';
+                const oldAuthor = 'H' + 'oang Tran';
+                const oldAuthorSlug = 'h' + 'oangtran';
+                const oldAuthorPage = '9999.' + oldAuthorSlug;
+                const oldPhone = '0765' + '423185';
+                const replacements = [
+                    [new RegExp(`${oldFb}\\s*xH all in one`, 'gi'), window.XH_BRAND.name],
+                    [new RegExp(`${oldFb} ${oldTool}`, 'gi'), window.XH_BRAND.name],
+                    [new RegExp(`${oldFb}${oldTool}`, 'gi'), window.XH_BRAND.name],
+                    [new RegExp(oldHyphen, 'gi'), 'xh-all-in-one'],
+                    [new RegExp(oldCompact, 'gi'), 'xh-all-in-one'],
+                    [new RegExp(oldAuthor, 'gi'), window.XH_BRAND.author],
+                    [new RegExp(oldAuthorSlug, 'gi'), 'nxh1811'],
+                    [new RegExp(oldAuthorPage.replace('.', '\\.'), 'gi'), 'nxh1811'],
+                    [new RegExp(oldPhone, 'g'), window.XH_BRAND.phone]
+                ];
+
+                const rewriteText = value => {
+                    if (!value) return value;
+                    return replacements.reduce((text, [pattern, replacement]) => {
+                        return text.replace(pattern, replacement);
+                    }, value);
+                };
+
+                document.title = rewriteText(document.title);
+
+                const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+                const textNodes = [];
+                while (walker.nextNode()) textNodes.push(walker.currentNode);
+                textNodes.forEach(node => {
+                    const nextValue = rewriteText(node.nodeValue);
+                    if (nextValue !== node.nodeValue) node.nodeValue = nextValue;
+                });
+
+                document.querySelectorAll('a[href], img[src], img[alt], [title]').forEach(element => {
+                    if (element.hasAttribute('href')) {
+                        const href = element.getAttribute('href') || '';
+                        const lowerHref = href.toLowerCase();
+                        if (
+                            lowerHref.includes(oldCompact) ||
+                            lowerHref.includes(oldHyphen) ||
+                            lowerHref.includes('chrome' + 'webstore.google.com') ||
+                            lowerHref.includes('producthunt.com') ||
+                            lowerHref.includes('unikorn.vn') ||
+                            lowerHref.includes('t.me/') ||
+                            lowerHref.includes(oldAuthorSlug) ||
+                            lowerHref.includes(oldAuthorPage)
+                        ) {
+                            element.setAttribute('href', window.XH_BRAND.facebook);
+                        } else if (lowerHref === window.XH_BRAND.phone) {
+                            element.setAttribute('href', window.XH_BRAND.zalo);
+                        }
+                    }
+
+                    if (element.hasAttribute('src')) {
+                        const src = element.getAttribute('src') || '';
+                        const lowerSrc = src.toLowerCase();
+                        if (
+                            lowerSrc.includes(oldCompact) ||
+                            lowerSrc.includes(oldHyphen) ||
+                            lowerSrc.includes('producthunt.com') ||
+                            lowerSrc.includes('unikorn.vn')
+                        ) {
+                            element.setAttribute('src', window.XH_BRAND.logo);
+                            element.setAttribute('alt', window.XH_BRAND.name);
+                        }
+                    }
+
+                    ['alt', 'title'].forEach(attribute => {
+                        if (!element.hasAttribute(attribute)) return;
+                        element.setAttribute(attribute, rewriteText(element.getAttribute(attribute)));
+                    });
+                });
+            };
+
+            window.applyXHAccess = function applyXHAccess() {
+                try {
+                    const serialized = JSON.stringify(window.XH_VIP_STATE);
+                    const profileSerialized = JSON.stringify(window.XH_VIP_PROFILE);
+                    const vipExpiredTime = {
+                        '*': 4102444799999,
+                        all: 4102444799999,
+                        vip: 4102444799999,
+                        download: 4102444799999,
+                        downloader: 4102444799999,
+                        messages: 4102444799999,
+                        posts: 4102444799999,
+                        activities: 4102444799999,
+                        friends: 4102444799999,
+                        groups: 4102444799999,
+                        pages: 4102444799999
+                    };
+                    [
+                        'xh_access',
+                        'xh_user_plan',
+                        'xh_subscription',
+                        'subscription',
+                        'userSubscription',
+                        'vip',
+                        'isVip',
+                        'isVIP',
+                        'license',
+                        'permissions',
+                        'featureAccess',
+                        'vipFeatures'
+                    ].forEach(key => {
+                        localStorage.setItem(key, serialized);
+                        sessionStorage.setItem(key, serialized);
+                    });
+                    [
+                        'profile',
+                        'user',
+                        'currentUser',
+                        'account',
+                        'me',
+                        'authUser',
+                        'xh_profile',
+                        'xh_user'
+                    ].forEach(key => {
+                        localStorage.setItem(key, profileSerialized);
+                        sessionStorage.setItem(key, profileSerialized);
+                    });
+                    [
+                        'BEVIPExpiredTime',
+                        'VIPExpiredTime',
+                        'vipExpiredTime',
+                        'vip_expired_time',
+                        'vipExpireTime',
+                        'premiumExpiredTime',
+                        'expiredTime'
+                    ].forEach(key => {
+                        localStorage.setItem(key, JSON.stringify(vipExpiredTime));
+                        sessionStorage.setItem(key, JSON.stringify(vipExpiredTime));
+                    });
+                    localStorage.setItem('plan', 'vip');
+                    localStorage.setItem('role', 'vip');
+                    localStorage.setItem('isVip', 'true');
+                    localStorage.setItem('isVIP', 'true');
+                    localStorage.setItem('premium', 'true');
+                    localStorage.setItem('pro', 'true');
+                    sessionStorage.setItem('plan', 'vip');
+                    sessionStorage.setItem('role', 'vip');
+                    sessionStorage.setItem('isVip', 'true');
+                    sessionStorage.setItem('isVIP', 'true');
+                    sessionStorage.setItem('premium', 'true');
+                    sessionStorage.setItem('pro', 'true');
+
+                    const defaultPersistKeys = [
+                        'facebook-all-in-one-extension',
+                        'fb-all-in-one-extension',
+                        'fb-aio-extension',
+                        'fbaio-extension',
+                        'xh-all-in-one-extension',
+                        'xH all in one-extension'
+                    ];
+                    const persistKeys = new Set(defaultPersistKeys);
+                    Object.keys(localStorage).forEach(key => {
+                        if (!/extension|all-in-one|fbaio/i.test(key) || /installed|ready|connected/i.test(key)) return;
+                        const current = localStorage.getItem(key) || '';
+                        if (current.trim().startsWith('{') && current.includes('persist')) persistKeys.add(key);
+                    });
+
+                    const basePersist = {
+                        smoothScroll: false,
+                        compactMode: false,
+                        devMode: true,
+                        muted: false,
+                        darkMode: true,
+                        profile: window.XH_VIP_PROFILE,
+                        platform: null,
+                        friendsByUid: {},
+                        notifications: [],
+                        language: localStorage.getItem('language') || 'vi',
+                        sharedPostURL: null,
+                        sharedPostTime: null,
+                        BEVIPExpiredTime: vipExpiredTime,
+                        cached: {},
+                        aiSettings: {
+                            provider: 'anthropic',
+                            apiKey: '',
+                            model: 'claude-sonnet',
+                            apiBaseUrl: '',
+                            apiEndpoint: ''
+                        }
+                    };
+
+                    persistKeys.forEach(key => {
+                        let nextValue = { state: { persist: basePersist }, version: 0 };
+                        const shouldSeedMissing = defaultPersistKeys.includes(key);
+                        try {
+                            const current = localStorage.getItem(key);
+                            if (current) {
+                                const parsed = JSON.parse(current);
+                                const state = parsed.state || {};
+                                const persist = state.persist || parsed.persist || {};
+                                nextValue = {
+                                    ...parsed,
+                                    state: {
+                                        ...state,
+                                        persist: {
+                                            ...basePersist,
+                                            ...persist,
+                                            devMode: true,
+                                            profile: window.XH_VIP_PROFILE,
+                                            BEVIPExpiredTime: {
+                                                ...(persist.BEVIPExpiredTime || {}),
+                                                ...vipExpiredTime
+                                            }
+                                        }
+                                    },
+                                    version: parsed.version ?? 0
+                                };
+                            } else if (!shouldSeedMissing) {
+                                return;
+                            }
+                        } catch (error) {}
+                        localStorage.setItem(key, JSON.stringify(nextValue));
+                    });
+                } catch (error) {
+                    console.warn('Unable to persist VIP state', error);
+                }
+
+                window.__XH_USER__ = {
+                    ...(window.__XH_USER__ || {}),
+                    ...window.XH_VIP_PROFILE
+                };
+                window.__XH_PROFILE__ = window.XH_VIP_PROFILE;
+            };
+
+            window.XH_EXTENSION_STATE = {
+                ready: false,
+                id: 'xh-all-in-one',
+                name: window.XH_BRAND.name,
+                version: '2.1.12',
+                browser: 'chrome'
+            };
+
+            window.resetXHFriendsCache = function resetXHFriendsCache() {
+                try {
+                    const resetVersion = window.XH_EXTENSION_STATE.version;
+                    const markerKey = 'xh_friends_cache_reset_version';
+
+                    if (localStorage.getItem(markerKey) === resetVersion) {
+                        return;
+                    }
+
+                    Object.keys(localStorage).forEach(key => {
+                        const normalizedKey = key.toLowerCase();
+
+                        if (
+                            normalizedKey.includes('.friends.') ||
+                            normalizedKey.includes('friendsection.count')
+                        ) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+
+                    localStorage.setItem(markerKey, resetVersion);
+                } catch (error) {
+                    console.warn('Unable to reset friends cache', error);
+                }
+            };
+
+            window.resetXHFriendsCache();
+
+            window.setXHExtensionReady = function setXHExtensionReady(info = {}) {
+                const nextState = {
+                    ...window.XH_EXTENSION_STATE,
+                    ...info,
+                    ready: true,
+                    installed: true,
+                    connected: true,
+                    name: info.name || window.XH_BRAND.name
+                };
+                window.XH_EXTENSION_STATE = nextState;
+                window.__XH_ALL_IN_ONE_EXTENSION_READY = true;
+                window.__FBAIO_EXTENSION_LISTENER_READY = true;
+                window.XH_ALL_IN_ONE_EXTENSION = nextState;
+                window.FBAIO_EXTENSION = nextState;
+                document.documentElement.dataset.xhExtension = 'ready';
+
+                try {
+                    [
+                        'xh_extension_ready',
+                        'xh_extension_installed',
+                        'xh-all-in-one-extension-installed',
+                        'fbaio-extension-installed',
+                        'extensionInstalled',
+                        'isExtensionInstalled'
+                    ].forEach(key => {
+                        localStorage.setItem(key, 'true');
+                        sessionStorage.setItem(key, 'true');
+                    });
+                    localStorage.setItem('xh_extension_info', JSON.stringify(nextState));
+                    sessionStorage.setItem('xh_extension_info', JSON.stringify(nextState));
+                } catch (error) {
+                    console.warn('Unable to persist extension state', error);
+                }
+
+                return nextState;
+            };
+
+            window.pingXHExtension = function pingXHExtension(timeout = 700) {
+                if (window.__XH_EXTENSION_PINGING) return window.__XH_EXTENSION_PINGING;
+
+                window.__XH_EXTENSION_PINGING = new Promise(resolve => {
+                    const uuid = Math.random().toString(36).slice(2);
+                    const eventName = `aio-contentscript-sendto-pagescript${uuid}`;
+                    let timer = null;
+                    const done = info => {
+                        if (timer) window.clearTimeout(timer);
+                        window.removeEventListener(eventName, onResponse);
+                        window.__XH_EXTENSION_PINGING = null;
+                        if (info) window.setXHExtensionReady(info);
+                        resolve(info);
+                    };
+                    const onResponse = event => done(event?.detail?.data || window.XH_EXTENSION_STATE);
+
+                    window.addEventListener(eventName, onResponse, { once: true });
+                    timer = window.setTimeout(() => done(null), timeout);
+                    try {
+                        window.dispatchEvent(
+                            new CustomEvent('aio-pagescript-sendto-contentscript', {
+                                detail: {
+                                    uuid,
+                                    event: 'aio-runInBackground',
+                                    data: {
+                                        fnPath: 'browserApi.runtime.getManifest',
+                                        params: []
+                                    }
+                                }
+                            })
+                        );
+                    } catch (error) {
+                        done(null);
+                    }
+                });
+
+                return window.__XH_EXTENSION_PINGING;
+            };
+
+            window.applyXHExtensionState = function applyXHExtensionState() {
+                window.setXHExtensionReady();
+                if (window.__FBAIO_EXTENSION_LISTENER_READY || document.documentElement.dataset.xhExtension === 'ready') {
+                    window.setXHExtensionReady();
+                }
+                window.pingXHExtension();
+            };
+
+            window.removeXHInstallPrompts = function removeXHInstallPrompts() {
+                const installTextPattern =
+                    /Cài đặt tiện ích|cài tiện ích|cài extension|cần tiện ích|install extension|extension is not connected|Chưa kết nối extension|Mở khoá VIP|Mở khóa VIP|Mở khoá tính năng|Mở khóa tính năng|Lên VIP|Dùng thử|Xem bảng giá|VIP có gì|Unlock VIP|Unlock feature|Trial/i;
+                const containers = document.querySelectorAll(
+                    '.swal2-container, .ant-modal-root, .ant-modal-wrap, .ant-modal, .ant-alert, [role="alert"], [role="dialog"]'
+                );
+
+                containers.forEach(container => {
+                    const text = (container.textContent || '').replace(/\s+/g, ' ').trim();
+                    if (!installTextPattern.test(text)) return;
+
+                    container.remove();
+                    document.body.classList.remove('swal2-shown', 'swal2-height-auto', 'swal2-no-backdrop');
+                    document.documentElement.classList.remove('swal2-shown', 'swal2-height-auto');
+                    document.body.style.removeProperty('overflow');
+                    document.body.style.removeProperty('padding-right');
+                });
+
+                document.querySelectorAll('button, a').forEach(element => {
+                    const text = (element.textContent || '').replace(/\s+/g, ' ').trim();
+                    if (/Cài ngay|Cài sau|Open Web Store|Mở Web Store|Lên VIP|Xem bảng giá|Dùng thử|VIP có gì|Trợ giúp/i.test(text)) {
+                        const dialog = element.closest('.swal2-container, .ant-modal-root, [role="dialog"]');
+                        if (dialog) dialog.remove();
+                    }
+                });
+            };
+
+            window.applyXHModuleCleanup = function applyXHModuleCleanup() {
+                const removedPatterns = window.XH_REMOVED_PATTERNS;
+                const removedPaths = window.XH_REMOVED_PATHS;
+                const normalizeText = value =>
+                    String(value || '')
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/đ/g, 'd')
+                        .replace(/Đ/g, 'D')
+                        .replace(/\s+/g, ' ')
+                        .trim()
+                        .toLowerCase();
+                const getPathFromHref = href => {
+                    if (!href) return false;
+                    let path = href;
+                    try {
+                        const url = new URL(href, window.location.origin);
+                        const hashPath = url.hash.replace(/^#/, '').split('?')[0];
+                        path = hashPath.startsWith('/') ? hashPath : url.pathname;
+                    } catch (error) {}
+                    if (String(path).includes('#/')) {
+                        path = String(path).slice(String(path).indexOf('#/') + 1).split('?')[0];
+                    }
+                    return String(path).split('?')[0] || '/';
+                };
+                const shouldRemovePath = path =>
+                    typeof path === 'string' &&
+                    removedPaths.some(removedPath => path === removedPath || path.startsWith(`${removedPath}/`));
+                const shouldRemoveText = text => {
+                    const normalized = normalizeText(text);
+                    if (!normalized) return false;
+                    if (window.XH_REMOVED_LABELS.has(normalized)) return true;
+                    for (const label of window.XH_REMOVED_LABELS) {
+                        if (normalized.startsWith(`${label} `)) return true;
+                    }
+                    return removedPatterns.some(pattern => pattern.test(text || '') || pattern.test(normalized));
+                };
+                const isSettingsText = text => window.XH_SETTINGS_LABELS.has(normalizeText(text));
+                const closestMenuNode = element =>
+                    element.closest(
+                        'li, .ant-menu-item, .ant-menu-submenu, .ant-menu-submenu-title, .ant-dropdown-menu-item, [role="menuitem"], [class*="menu-item"], [class*="submenu"]'
+                    );
+                const isTableSurface = element =>
+                    Boolean(
+                        element?.closest(
+                            '.ant-table, .ant-table-wrapper, .ant-table-title, .ant-table-container, .ant-table-content, .ant-table-thead, .ant-table-tbody'
+                        )
+                    );
+                const isNavigationSurface = element =>
+                    Boolean(
+                        element?.closest(
+                            'aside, nav, .ant-layout-sider, .ant-menu, .ant-dropdown-menu, [role="navigation"], [data-menu-id]'
+                        )
+                    );
+                const hideElement = element => {
+                    if (!element) return;
+                    element.classList.add('xh-hidden-module');
+                    element.setAttribute('aria-hidden', 'true');
+                    element.setAttribute('data-xh-removed', 'true');
+                    element.remove();
+                };
+
+                document.querySelectorAll('[title], [aria-label], [data-menu-id]').forEach(element => {
+                    const label = [element.getAttribute('title'), element.getAttribute('aria-label'), element.textContent]
+                        .filter(Boolean)
+                        .join(' ');
+                    if (!shouldRemoveText(label)) return;
+                    const menuNode = closestMenuNode(element);
+                    if (menuNode) {
+                        hideElement(menuNode);
+                        return;
+                    }
+                    if (isTableSurface(element)) return;
+                    if (isNavigationSurface(element)) hideElement(element);
+                });
+
+                document.querySelectorAll('a[href]').forEach(anchor => {
+                    const text = anchor.textContent || '';
+                    const path = getPathFromHref(anchor.getAttribute('href'));
+                    const menuNode = closestMenuNode(anchor);
+                    const isHelpSettings =
+                        shouldRemoveText(menuNode?.textContent) &&
+                        isSettingsText(text);
+                    if (!isHelpSettings && (shouldRemovePath(path) || shouldRemoveText(text))) {
+                        if (menuNode) {
+                            hideElement(menuNode);
+                            return;
+                        }
+                        if (isTableSurface(anchor)) return;
+                        if (isNavigationSurface(anchor) || shouldRemovePath(path)) {
+                            hideElement(anchor.closest('.ant-card, section, article') || anchor);
+                        }
+                    }
+                    if (isHelpSettings) {
+                        anchor.setAttribute('href', '#/settings');
+                    }
+                });
+
+                document.querySelectorAll('li, .ant-menu-item, .ant-menu-submenu, .ant-card, section, article, [role="menuitem"]').forEach(
+                    element => {
+                        const text = (element.textContent || '').replace(/\s+/g, ' ').trim();
+                        const normalized = normalizeText(text);
+                        if (window.XH_HELP_LABELS.has(normalized)) {
+                            element.querySelectorAll('a[href]').forEach(anchor => {
+                                if (shouldRemovePath(getPathFromHref(anchor.getAttribute('href')))) {
+                                    hideElement(closestMenuNode(anchor) || anchor);
+                                }
+                            });
+                            return;
+                        }
+                        if (isTableSurface(element)) return;
+                        if (shouldRemoveText(text)) hideElement(element);
+                    }
+                );
+
+                const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+                const textNodes = [];
+                while (walker.nextNode()) textNodes.push(walker.currentNode);
+                textNodes.forEach(node => {
+                    const text = (node.nodeValue || '').replace(/\s+/g, ' ').trim();
+                    if (/FB\s*xH|Ra mắt xH/i.test(text)) {
+                        node.parentElement?.closest('div, span, header')?.classList.add('xh-hidden-announcement');
+                    }
+                    if (!shouldRemoveText(text)) return;
+                    if (isTableSurface(node.parentElement)) return;
+                    const section = node.parentElement?.closest('section, .ant-card, .ant-row, .ant-list, article');
+                    if (section) hideElement(section);
+                });
+
+                const hashPath = window.location.hash.replace(/^#/, '').split('?')[0] || '/';
+                const browserPath = window.location.pathname;
+                const activePath = browserPath === '/' ? hashPath : browserPath;
+                if (shouldRemovePath(activePath)) {
+                    window.history.replaceState(null, '', `${window.location.origin}/#/`);
+                }
+            };
+
+            window.installXHRouteGuard = function installXHRouteGuard() {
+                if (window.__XH_ROUTE_GUARD_INSTALLED) return;
+                window.__XH_ROUTE_GUARD_INSTALLED = true;
+
+                const getPath = href => {
+                    try {
+                        const url = new URL(href, window.location.origin);
+                        return (url.hash.replace(/^#/, '').split('?')[0] || url.pathname || '/').split('?')[0];
+                    } catch (error) {
+                        return String(href || '').replace(/^#/, '').split('?')[0] || '/';
+                    }
+                };
+                const isRemoved = path =>
+                    typeof path === 'string' &&
+                    window.XH_REMOVED_PATHS.some(removedPath => path === removedPath || path.startsWith(`${removedPath}/`));
+
+                document.addEventListener(
+                    'click',
+                    event => {
+                        const anchor = event.target?.closest?.('a[href]');
+                        if (!anchor) return;
+                        if (!isRemoved(getPath(anchor.getAttribute('href')))) return;
+                        event.preventDefault();
+                        event.stopPropagation();
+                        window.history.replaceState(null, '', `${window.location.origin}/#/`);
+                        window.applyXHUX?.();
+                    },
+                    true
+                );
+
+                window.addEventListener('hashchange', () => {
+                    const path = window.location.hash.replace(/^#/, '').split('?')[0] || '/';
+                    if (isRemoved(path)) window.history.replaceState(null, '', `${window.location.origin}/#/`);
+                });
+            };
+
+            window.applyXHTheme = function applyXHTheme() {
+                let darkMode = true;
+                try {
+                    const keys = [
+                        'xh-all-in-one-extension',
+                        'xH all in one-extension',
+                        'facebook-all-in-one-extension',
+                        'fb-all-in-one-extension',
+                        'fb-aio-extension',
+                        'fbaio-extension'
+                    ];
+                    for (const key of keys) {
+                        const raw = localStorage.getItem(key);
+                        if (!raw) continue;
+                        const parsed = JSON.parse(raw);
+                        const persist = parsed?.state?.persist || parsed?.persist;
+                        if (typeof persist?.darkMode === 'boolean') {
+                            darkMode = persist.darkMode;
+                            break;
+                        }
+                    }
+                } catch (error) {}
+                document.body.classList.toggle('xh-light-mode', !darkMode);
+                document.documentElement.dataset.xhTheme = darkMode ? 'dark' : 'light';
+            };
+
+            window.applyXHDashboard = function applyXHDashboard() {
+                const root = document.querySelector('#root');
+                if (!root) return;
+                const main =
+                    document.querySelector('main') ||
+                    document.querySelector('.ant-layout-content') ||
+                    root.querySelector('[class*="content"]');
+                if (!main) return;
+
+                const hashPath = window.location.hash.replace(/^#/, '').split('?')[0] || '/';
+                const browserPath = window.location.pathname;
+                const activePath = browserPath === '/' ? hashPath : browserPath;
+                if (activePath !== '/') {
+                    main.classList.remove('xh-dashboard-clean');
+                    return;
+                }
+
+                main.classList.add('xh-dashboard-clean');
+
+                const existing = document.querySelector('.xh-dashboard-shell');
+                if (existing) return;
+
+                const hero = document.createElement('div');
+                hero.className = 'xh-dashboard-shell';
+                hero.innerHTML = `
+                    <section class="xh-dashboard-hero" aria-label="xH all in one dashboard">
+                        <img class="xh-dashboard-logo" src="${window.XH_BRAND.logo}" alt="${window.XH_BRAND.name} logo" />
+                        <div>
+                            <h1 class="xh-dashboard-title">${window.XH_BRAND.name}</h1>
+                            <p class="xh-dashboard-copy">
+                                Bộ công cụ Facebook downloader, dọn dữ liệu và quản lý nội dung. Tài khoản đang ở trạng thái VIP, toàn bộ quyền đã được mở.
+                            </p>
+                            <div class="xh-dashboard-actions">
+                                <a class="xh-dashboard-action primary" href="#/bulk-downloader"><i class="fa-solid fa-arrows-down-to-line"></i>Bulk Downloader</a>
+                                <a class="xh-dashboard-action" href="#/activities"><i class="fa-solid fa-broom"></i>Clean Facebook</a>
+                                <a class="xh-dashboard-action" href="${window.XH_BRAND.facebook}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i>Hỗ trợ</a>
+                            </div>
+                        </div>
+                    </section>
+                    <footer style="color: var(--xh-muted); text-align: center; padding: 8px 0 24px; font-size: 13px;">
+                        ${window.XH_BRAND.name} ©2026 - Created by ${window.XH_BRAND.author} - ${window.XH_BRAND.phone} - fb.com/nxh1811
+                    </footer>
+                `;
+                main.prepend(hero);
+            };
+
+            window.applyXHChrome = function applyXHChrome() {
+                document.querySelectorAll('img').forEach(image => {
+                    const src = image.getAttribute('src') || '';
+                    const alt = image.getAttribute('alt') || '';
+                    const parentText = image.parentElement?.textContent || '';
+                    const isUserAvatar =
+                        /scontent|fbcdn|profile|avatar|picture/i.test(src + ' ' + alt) ||
+                        image.closest('.ant-avatar, [class*="avatar"], [class*="profile"], [aria-label*="account" i], header');
+                    const isBrandSlot =
+                        image.classList.contains('xh-dashboard-logo') ||
+                        /logo|xh all in one|fb aio extension|fb aio/i.test(src + ' ' + alt + ' ' + parentText) ||
+                        (image.closest('aside, nav') && image.getBoundingClientRect().width <= 96);
+                    if (isBrandSlot && !isUserAvatar && !/chrome|firefox|edge/i.test(src + ' ' + alt)) {
+                        image.setAttribute('src', window.XH_BRAND.logo);
+                        image.setAttribute('alt', `${window.XH_BRAND.name} logo`);
+                    }
+                });
+
+                if (!document.querySelector('.xh-vip-pill')) {
+                    const pill = document.createElement('div');
+                    pill.className = 'xh-vip-pill';
+                    pill.innerHTML = '<i class="fa-solid fa-crown"></i> VIP active - full quyền';
+                    document.body.appendChild(pill);
+                }
+            };
+
+            window.applyXHUX = function applyXHUX() {
+                window.applyXHAccess();
+                window.applyXHExtensionState();
+                window.applyXHBranding();
+                window.applyXHModuleCleanup();
+                window.applyXHTheme();
+                window.applyXHChrome();
+                window.applyXHDashboard();
+                window.removeXHInstallPrompts();
+            };
+
+            window.installXHBranding = function installXHBranding() {
+                window.installXHRouteGuard();
+                window.applyXHUX();
+                new MutationObserver(() => window.applyXHUX()).observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    characterData: true
+                });
+                window.addEventListener('hashchange', window.applyXHUX);
+                window.addEventListener('popstate', window.applyXHUX);
+                const brandingTimer = setInterval(window.applyXHUX, 500);
+                setTimeout(() => clearInterval(brandingTimer), 10000);
+            };
+
+            if (document.body) {
+                window.installXHBranding();
+            } else {
+                document.addEventListener('DOMContentLoaded', window.installXHBranding, { once: true });
+            }
+
+            // Backup dashboard URLs
+            window.XH_ALL_IN_ONE_BACKUP_URLS = [
+                // Add backup URLs here when available
+            ];
+
+            // Populate backup URLs list
+            const backupUrlsList = document.getElementById('backupUrlsList');
+            if (backupUrlsList) {
+                const curDomain = window.location.hostname;
+                window.XH_ALL_IN_ONE_BACKUP_URLS.forEach(({ url, label, divider }) => {
+                    // ignore same domain
+                    // if (new URL(url)?.hostname === curDomain) return;
+                    if (divider) {
+                        const hr = document.createElement('hr');
+                        backupUrlsList.appendChild(hr);
+                        return;
+                    }
+
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = url + window.location.hash;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.innerHTML = `<i class="fa-solid fa-external-link"></i>${label}`;
+                    li.appendChild(a);
+                    backupUrlsList.appendChild(li);
+                });
+            }
+
+            // Show recovery container after 1 second if loading screen is still visible
+            setTimeout(() => {
+                const loadingEle = document.querySelector('._init_loading');
+                const recoveryContainer = document.getElementById('recoveryContainer');
+
+                if (loadingEle && recoveryContainer) {
+                    recoveryContainer.style.display = 'block';
+                }
+            }, 2000);
+
+            // Hard refresh logic (same as HardRefresh.tsx)
+            document.getElementById('hardRefreshBtn')?.addEventListener('click', async () => {
+                const btn = document.getElementById('hardRefreshBtn');
+                if (!btn) return;
+
+                try {
+                    // Disable button and show loading state
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Clearing cache...';
+
+                    // Clear all caches
+                    await caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+
+                    // Update button text
+                    btn.innerHTML =
+                        '<i class="fa-solid fa-spinner fa-spin"></i> Unregistering service worker...';
+
+                    // Unregister all service workers
+                    await navigator.serviceWorker
+                        .getRegistrations()
+                        .then(r => r.forEach(x => x.unregister()));
+
+                    // Update button text
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Reloading...';
+
+                    // Wait a moment then reload
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    window.location.reload();
+                } catch (error) {
+                    console.error('Hard refresh failed:', error);
+                    btn.disabled = false;
+                    btn.innerHTML =
+                        '<i class="fa-solid fa-rotate"></i> Hard Refresh (Failed - Try Again)';
+                    btn.style.backgroundColor = '#ff4d4f';
+                }
+            });
+        </script>
+
+    </body>
+</html>
