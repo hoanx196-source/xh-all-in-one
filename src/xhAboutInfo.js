@@ -1,10 +1,12 @@
 import { j as getCollectionId, h as fetchGraphQl, p as parseSafe } from './B213zw-8.js';
 import { deepFind } from './jfxAbuAi.js';
+import { h as fetchRaw } from './ZQcttVra.js';
 
 const CONTACT_SECTIONS = ['about_contact_and_basic_info', 'directory_contact_info'];
 const ABOUT_DOC = 'getAboutAppSection';
 const SECTION_SUFFIX = ':2327158227';
 const APP_SECTION_PREFIX = 'ProfileCometAppSectionFeed_timeline_nav_app_sections__';
+const MBASIC_ABOUT_URL = 'https://mbasic.facebook.com/profile.php?id=';
 
 const FIELD_ALIASES = {
   birthdate: 'birthday',
@@ -74,6 +76,14 @@ function mergeKnown(target, field) {
   target[key] = target[key] || field.value;
 }
 
+function pushUnique(rows, seen, field) {
+  if (!field?.value) return;
+  const key = `${field.field_type || ''}|${field.label || ''}|${field.value}`;
+  if (seen.has(key)) return;
+  seen.add(key);
+  rows.push(field);
+}
+
 function collectFields(value, out = []) {
   if (!value) return out;
   if (Array.isArray(value)) {
@@ -93,47 +103,144 @@ function collectFields(value, out = []) {
   return out;
 }
 
+function linesFromHtml(html) {
+  if (!html) return [];
+  try {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return (doc.body?.innerText || '')
+      .split('\n')
+      .map(line => line.replace(/\s+/g, ' ').trim())
+      .filter(Boolean);
+  } catch {
+    return String(html)
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '\n')
+      .split('\n')
+      .map(line => line.replace(/\s+/g, ' ').trim())
+      .filter(Boolean);
+  }
+}
+
+function parseMbasicAbout(html) {
+  const lines = linesFromHtml(html);
+  const rows = [];
+  const seen = new Set();
+  let section = '';
+
+  for (const line of lines) {
+    if (['Thông tin cá nhân', 'Personal information'].includes(line)) {
+      section = 'personal';
+      continue;
+    }
+    if (['Giáo dục', 'Education'].includes(line)) {
+      section = 'education';
+      continue;
+    }
+    if (['Thông tin liên hệ', 'Contact info', 'Contact information'].includes(line)) {
+      section = 'contact';
+      continue;
+    }
+    if (['Tin nổi bật', 'Featured', 'Bài viết', 'Posts', 'Ảnh', 'Photos', 'Bạn bè', 'Friends'].includes(line)) {
+      if (section) section = '';
+      continue;
+    }
+    if (!section) continue;
+
+    if (/^(Sống ở|Lives in)\s+/i.test(line)) {
+      pushUnique(rows, seen, {
+        field_type: 'current_city',
+        label: 'Vị trí hiện tại',
+        value: line.replace(/^(Sống ở|Lives in)\s+/i, '').trim(),
+      });
+      continue;
+    }
+    if (/^(Đến từ|From)\s+/i.test(line)) {
+      pushUnique(rows, seen, {
+        field_type: 'hometown',
+        label: 'Quê quán',
+        value: line.replace(/^(Đến từ|From)\s+/i, '').trim(),
+      });
+      continue;
+    }
+    if (/^\d{1,2}\s+tháng\s+\d{1,2}(,\s*\d{4})?$/i.test(line) || /^[A-Z][a-z]+\s+\d{1,2}(,\s*\d{4})?$/i.test(line)) {
+      pushUnique(rows, seen, { field_type: 'birthday', label: 'Ngày sinh', value: line });
+      continue;
+    }
+    if (/^(Nam|Nữ|Male|Female)$/i.test(line)) {
+      pushUnique(rows, seen, { field_type: 'gender', label: 'Giới tính', value: line });
+      continue;
+    }
+    if (section === 'education') {
+      pushUnique(rows, seen, { field_type: 'education', label: 'Học vấn', value: line });
+      continue;
+    }
+    if (section === 'contact') {
+      const isWebsite = /^https?:\/\//i.test(line) || /\.[a-z]{2,}(\/|$)/i.test(line);
+      pushUnique(rows, seen, {
+        field_type: isWebsite ? 'website' : 'contact',
+        label: isWebsite ? 'Website / Liên hệ' : 'Thông tin liên hệ',
+        value: line,
+        url: /^https?:\/\//i.test(line) ? line : '',
+      });
+      continue;
+    }
+    pushUnique(rows, seen, { field_type: 'personal', label: 'Thông tin cá nhân', value: line });
+  }
+
+  return rows;
+}
+
+async function getMbasicAboutRows(uid) {
+  try {
+    const html = await fetchRaw(`${MBASIC_ABOUT_URL}${encodeURIComponent(uid)}&v=info`);
+    return parseMbasicAbout(html);
+  } catch (error) {
+    console.warn('xH about mbasic fallback failed', error);
+    return [];
+  }
+}
+
 export async function getUserAboutBasicInfo(uid) {
   if (!uid) return null;
+  const rows = [];
+  const seen = new Set();
+
   let rawSectionToken = null;
   for (const section of CONTACT_SECTIONS) {
     rawSectionToken = await getCollectionId(uid, section).catch(() => null);
     if (rawSectionToken) break;
   }
-  if (!rawSectionToken) return null;
 
-  const response = await fetchGraphQl({
-    fb_api_req_friendly_name: 'ProfileCometAboutAppSectionQuery',
-    variables: {
-      appSectionFeedKey: APP_SECTION_PREFIX + rawSectionToken,
-      collectionToken: null,
-      pageID: uid,
-      rawSectionToken,
-      scale: 2,
-      sectionToken: btoa(`app_section:${uid}${SECTION_SUFFIX}`),
-      showReactions: true,
-      userID: uid,
-      __relay_internal__pv__FBProfile_enable_perf_improv_gkrelayprovider: true,
-      __relay_internal__pv__CometUFIReactionsEnableShortNamerelayprovider: false,
-      __relay_internal__pv__FBReels_deprecate_short_form_video_context_gkrelayprovider: true,
-      __relay_internal__pv__FBReelsMediaFooter_comet_enable_reels_ads_gkrelayprovider: true,
-      __relay_internal__pv__FBUnifiedVideo_enable_reel_music_metadatarelayprovider: false,
-      __relay_internal__pv__FBUnifiedVideoMediaFooter_comet_enable_reels_ads_gkrelayprovider: true,
-    },
-    doc_id: ABOUT_DOC,
-  });
+  if (rawSectionToken) {
+    const response = await fetchGraphQl({
+      fb_api_req_friendly_name: 'ProfileCometAboutAppSectionQuery',
+      variables: {
+        appSectionFeedKey: APP_SECTION_PREFIX + rawSectionToken,
+        collectionToken: null,
+        pageID: uid,
+        rawSectionToken,
+        scale: 2,
+        sectionToken: btoa(`app_section:${uid}${SECTION_SUFFIX}`),
+        showReactions: true,
+        userID: uid,
+        __relay_internal__pv__FBProfile_enable_perf_improv_gkrelayprovider: true,
+        __relay_internal__pv__CometUFIReactionsEnableShortNamerelayprovider: false,
+        __relay_internal__pv__FBReels_deprecate_short_form_video_context_gkrelayprovider: true,
+        __relay_internal__pv__FBReelsMediaFooter_comet_enable_reels_ads_gkrelayprovider: true,
+        __relay_internal__pv__FBUnifiedVideo_enable_reel_music_metadatarelayprovider: false,
+        __relay_internal__pv__FBUnifiedVideoMediaFooter_comet_enable_reels_ads_gkrelayprovider: true,
+      },
+      doc_id: ABOUT_DOC,
+    });
 
-  const parsed = parseSafe(response, [], true);
-  const rows = [];
-  const seen = new Set();
+    const parsed = parseSafe(response, [], true);
+    for (const rawField of collectFields(parsed)) {
+      pushUnique(rows, seen, normalizeField(rawField));
+    }
+  }
 
-  for (const rawField of collectFields(parsed)) {
-    const field = normalizeField(rawField);
-    if (!field) continue;
-    const key = `${field.field_type}|${field.label}|${field.value}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    rows.push(field);
+  for (const field of await getMbasicAboutRows(uid)) {
+    pushUnique(rows, seen, field);
   }
 
   const info = { rows };
