@@ -1,6 +1,6 @@
 (() => {
     const resetKey = 'xh-aio-cache-reset-version';
-    const resetVersion = 'rollback-20260710-1';
+    const resetVersion = 'about-fields-20260710-1';
 
     window.addEventListener('load', async () => {
         const needsReload = window.localStorage.getItem(resetKey) !== resetVersion;
