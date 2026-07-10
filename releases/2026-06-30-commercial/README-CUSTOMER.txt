@@ -9,7 +9,7 @@ CAI DAT:
 4. Bat Developer mode.
 5. Bam Load unpacked.
 6. Chon thu muc extension vua giai nen.
-7. Mo https://nxh1811.github.io/ va hard reload 1 lan.
+7. Mo https://xh.nyna.io.vn/ va hard reload 1 lan.
 
 LUU Y:
 - Khong xoa file/thumuc trong extension.
@@ -17,6 +17,6 @@ LUU Y:
 - Neu da cai ban cu, nen remove ban cu truoc roi cai lai ban nay.
 
 HO TRO:
-- Website: https://nxh1811.github.io/
+- Website: https://xh.nyna.io.vn/
 - Facebook: https://fb.com/nxh1811
 - Phone: 0833680707

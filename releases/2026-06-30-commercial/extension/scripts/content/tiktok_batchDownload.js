@@ -183,7 +183,7 @@
   <div class="fbaio_floating_btn" @click="showModal = true">\u{1F4E5} {{totalCount}}</div>
   <div class="fbaio_container" v-if="showModal" @click.self="showModal = false">
     <div class="fbaio_popup">
-      <h1 style="text-align:center">{{platformTitle}} - <a target="_blank" href="https://nxh1811.github.io/">xH all in one</a></h1>
+      <h1 style="text-align:center">{{platformTitle}} - <a target="_blank" href="https://xh.nyna.io.vn/">xH all in one</a></h1>
       <h2 style="text-align:center">Found {{totalCount}} videos</h2>
 
       <div class="fbaio_popup_header">

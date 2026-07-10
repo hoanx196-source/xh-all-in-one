@@ -9,7 +9,7 @@
     "48": "assets/icon32.png",
     "128": "assets/icon128.png"
   },
-  "homepage_url": "https://nxh1811.github.io/",
+  "homepage_url": "https://xh.nyna.io.vn/",
   "default_locale": "en",
   "permissions": [
     "idle",
@@ -51,7 +51,7 @@
   ],
   "externally_connectable": {
     "matches": [
-      "https://nxh1811.github.io/*",
+      "https://xh.nyna.io.vn/*",
       "https://fb.com/*",
       "https://www.facebook.com/*"
     ]
