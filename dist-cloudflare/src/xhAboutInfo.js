@@ -1,12 +1,12 @@
 import { j as getCollectionId, h as fetchGraphQl, p as parseSafe } from './B213zw-8.js';
 import { deepFind } from './jfxAbuAi.js';
-import { f as fetchRaw } from './ZQcttVra.js';
+import { h as fetchRaw } from './ZQcttVra.js';
 
 const CONTACT_SECTIONS = ['about_contact_and_basic_info', 'directory_contact_info'];
 const ABOUT_DOC = 'getAboutAppSection';
 const SECTION_SUFFIX = ':2327158227';
 const APP_SECTION_PREFIX = 'ProfileCometAppSectionFeed_timeline_nav_app_sections__';
-const MBASIC_ABOUT_URL = 'https://mbasic.facebook.com/profile.php?id=';
+const MBASIC_BASE = 'https://mbasic.facebook.com/';
 
 const FIELD_ALIASES = {
   birthdate: 'birthday',
@@ -190,17 +190,43 @@ function parseMbasicAbout(html) {
   return rows;
 }
 
-async function getMbasicAboutRows(uid) {
-  try {
-    const html = await fetchRaw(`${MBASIC_ABOUT_URL}${encodeURIComponent(uid)}&v=info`);
-    return parseMbasicAbout(html);
-  } catch (error) {
-    console.warn('xH about mbasic fallback failed', error);
-    return [];
-  }
+function getProfilePath(profile = {}) {
+  const url = profile.url || profile.profile_url || '';
+  const match = String(url).match(/facebook\.com\/([^/?#]+)/i);
+  const username = match?.[1];
+  if (username && username !== 'profile.php' && !/^people$/i.test(username)) return username;
+  return '';
 }
 
-export async function getUserAboutBasicInfo(uid) {
+async function fetchWithTimeout(url, timeout = 12000) {
+  return Promise.race([
+    fetchRaw(url),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('mbasic timeout')), timeout)),
+  ]);
+}
+
+async function getMbasicAboutRows(uid, profile = {}) {
+  const paths = [];
+  const username = getProfilePath(profile);
+  if (username) {
+    paths.push(`${MBASIC_BASE}${encodeURIComponent(username)}?v=info`);
+    paths.push(`${MBASIC_BASE}${encodeURIComponent(username)}/about`);
+  }
+  paths.push(`${MBASIC_BASE}profile.php?id=${encodeURIComponent(uid)}&v=info`);
+
+  for (const url of paths) {
+    try {
+      const html = await fetchWithTimeout(url);
+      const rows = parseMbasicAbout(html);
+      if (rows.length) return rows;
+    } catch (error) {
+      console.warn('xH about mbasic fallback failed', url, error);
+    }
+  }
+  return [];
+}
+
+export async function getUserAboutBasicInfo(uid, profile = {}) {
   if (!uid) return null;
   const rows = [];
   const seen = new Set();
@@ -239,7 +265,7 @@ export async function getUserAboutBasicInfo(uid) {
     }
   }
 
-  for (const field of await getMbasicAboutRows(uid)) {
+  for (const field of await getMbasicAboutRows(uid, profile)) {
     pushUnique(rows, seen, field);
   }
 
