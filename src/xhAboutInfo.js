@@ -1,6 +1,6 @@
 import { j as getCollectionId, h as fetchGraphQl, p as parseSafe } from './B213zw-8.js';
 import { deepFind } from './jfxAbuAi.js';
-import { h as fetchRaw } from './ZQcttVra.js';
+import { f as fetchRaw } from './ZQcttVra.js';
 
 const CONTACT_SECTIONS = ['about_contact_and_basic_info', 'directory_contact_info'];
 const ABOUT_DOC = 'getAboutAppSection';

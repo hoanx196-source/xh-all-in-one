@@ -1,6 +1,6 @@
 (() => {
     const resetKey = 'xh-aio-cache-reset-version';
-    const resetVersion = 'about-uid-20260710-1';
+    const resetVersion = 'about-fetch-20260710-1';
 
     window.addEventListener('load', async () => {
         const needsReload = window.localStorage.getItem(resetKey) !== resetVersion;
