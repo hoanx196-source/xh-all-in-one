@@ -1,0 +1,1 @@
+(()=>{console.log("xH all in one: Insta right-click images ENABLED");const e=document.createElement("style");e.textContent='div:has(> div > img[style*="object-fit"]) > div:empty { display: none !important; }',(document.head||document.documentElement)?.appendChild?.(e)})();

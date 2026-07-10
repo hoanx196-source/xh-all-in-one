@@ -1,0 +1,13 @@
+{
+  "name": "xh-all-in-one",
+  "version": "1.0.0",
+  "description": "xH all in one - static PWA bundle",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 4173",
+    "serve": "python3 -m http.server 4173",
+    "deploy": "firebase deploy",
+    "check": "node ./scripts/check-static-assets.mjs"
+  }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="manifest.default_icon" content="{&quot;32&quot;:&quot;assets/icon32.png&quot;}">
+    <title>xH all in one</title>
+
+    <style>
+      :root {
+        --xh-bg: #061112;
+        --xh-panel: #0d1b1d;
+        --xh-border: rgba(134, 183, 128, 0.26);
+        --xh-teal: #16869a;
+        --xh-green: #8ab77a;
+        --xh-text: #eef8f4;
+        --xh-muted: #9fb7b1;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at top left, rgba(37, 169, 187, 0.18), transparent 13rem),
+          linear-gradient(135deg, #061112, #081515 52%, #0c1713) !important;
+        color: var(--xh-text) !important;
+      }
+
+      .xh-hidden {
+        display: none !important;
+      }
+
+      .xh-vip-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin: 10px;
+        padding: 8px 10px;
+        border: 1px solid var(--xh-border);
+        border-radius: 8px;
+        color: var(--xh-text);
+        background: rgba(13, 27, 29, 0.78);
+        font: 650 12px/1.2 Inter, system-ui, sans-serif;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+    <script type="module" crossorigin src="/chunks/popup-DmmiRiDx.js"></script>
+    <link rel="modulepreload" crossorigin href="/chunks/_virtual_wxt-plugins-C0WahzAm.js">
+    <link rel="stylesheet" crossorigin href="/assets/popup-Dzep-ZNW.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script>
+      window.XH_EXTENSION_BRAND = {
+        name: 'xH all in one',
+        dashboard: 'https://nxh1811.github.io/',
+        support: 'https://fb.com/nxh1811',
+        author: 'Xuân Hoà',
+        phone: '0833680707'
+      };
+
+      window.XH_EXTENSION_VIP = {
+        active: true,
+        isVip: true,
+        plan: 'vip',
+        tier: 'vip',
+        permissions: ['*'],
+        expiresAt: '2099-12-31T23:59:59.999Z'
+      };
+
+      window.applyXHExtensionBranding = function applyXHExtensionBranding() {
+        document.title = window.XH_EXTENSION_BRAND.name;
+
+        try {
+          localStorage.setItem('xh_extension_vip', JSON.stringify(window.XH_EXTENSION_VIP));
+          localStorage.setItem('isVip', 'true');
+          localStorage.setItem('plan', 'vip');
+        } catch (error) {}
+
+        document.querySelectorAll('img[alt], [title]').forEach(element => {
+          ['alt', 'title'].forEach(attribute => {
+            const value = element.getAttribute(attribute);
+            if (value) element.setAttribute(attribute, value.replace(/FB AIO|FBAIO|fb aio/gi, window.XH_EXTENSION_BRAND.name));
+          });
+        });
+
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(node => {
+          node.nodeValue = (node.nodeValue || '')
+            .replace(/FB AIO|FBAIO|fb aio/gi, window.XH_EXTENSION_BRAND.name)
+            .replace(/Chrome Webstore/gi, 'Hỗ trợ');
+        });
+
+        document.querySelectorAll('a[href], button').forEach(element => {
+          const text = (element.textContent || '').trim();
+          const href = element.getAttribute?.('href') || '';
+          if (/youtube|utils|pricing|price|webstore/i.test(text + ' ' + href)) {
+            element.closest('button, a, .tool-subtab, .autorun-item, .tab-btn, div')?.classList.add('xh-hidden');
+          }
+          if (href && /chromewebstore|fbaio|fb-aio|facebook-all-in-one/i.test(href)) {
+            element.setAttribute('href', window.XH_EXTENSION_BRAND.support);
+          }
+        });
+
+        if (!document.querySelector('.xh-vip-bar')) {
+          const bar = document.createElement('div');
+          bar.className = 'xh-vip-bar';
+          bar.innerHTML = '<i class="fa-solid fa-crown"></i> VIP active - full quyền';
+          document.body.prepend(bar);
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        window.applyXHExtensionBranding();
+        new MutationObserver(window.applyXHExtensionBranding).observe(document.body, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+        const timer = setInterval(window.applyXHExtensionBranding, 500);
+        setTimeout(() => clearInterval(timer), 10000);
+      });
+    </script>
+
+  </body>
+</html>

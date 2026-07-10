@@ -1,0 +1,95 @@
+{
+  "manifest_version": 3,
+  "name": "xH all in one",
+  "description": "__MSG_extDescription__",
+  "version": "2.1.12",
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon32.png",
+    "128": "assets/icon128.png"
+  },
+  "homepage_url": "https://nxh1811.github.io/",
+  "default_locale": "en",
+  "permissions": [
+    "idle",
+    "storage",
+    "cookies",
+    "activeTab",
+    "scripting",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "declarativeNetRequestWithHostAccess",
+    "downloads"
+  ],
+  "optional_permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*/*",
+    "<all_urls>"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "enabled": true,
+        "id": "ruleset_xh_all_in_one",
+        "path": "rules.json"
+      }
+    ]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "scripts/utils/*.js",
+        "scripts/content/helper/*.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "externally_connectable": {
+    "matches": [
+      "https://nxh1811.github.io/*",
+      "https://fb.com/*",
+      "https://www.facebook.com/*"
+    ]
+  },
+  "background": {
+    "type": "module",
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "32": "assets/icon32.png"
+    },
+    "default_title": "xH all in one",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "js": [
+        "content-scripts/content.js"
+      ],
+      "world": "ISOLATED"
+    },
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "js": [
+        "content-scripts/listener.js"
+      ],
+      "world": "MAIN"
+    }
+  ],
+  "short_name": "xH all in one"
+}

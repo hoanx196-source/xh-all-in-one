@@ -1,4 +1,4 @@
-import { h as callGraphql, p as parseSafe, g as getMyUid } from './B213zw-8.js?v=bulk-token-paste-20260707-1';
+import { h as callGraphql, p as parseSafe, g as getMyUid } from './B213zw-8.js';
 
 const FriendRequestType = {
   INCOMING_REQUEST: 'INCOMING_REQUEST',

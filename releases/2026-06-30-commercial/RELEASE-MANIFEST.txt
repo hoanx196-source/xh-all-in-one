@@ -1,0 +1,7 @@
+name=xH all in one
+extension_version=2.1.12
+release_date=2026-06-30
+web_commit=591e50d
+rollback_tag=backup-pages-scanner-20260630
+homepage=https://nxh1811.github.io/
+package=xh-all-in-one-commercial-2.1.12-20260630.zip

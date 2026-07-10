@@ -5,7 +5,7 @@ import {
     p as parseSafe,
     j as getCollectionId,
     d as getFbUrlFromId
-} from './B213zw-8.js?v=bulk-token-paste-20260707-1';
+} from './B213zw-8.js';
 
 const PAGE_DOC_IDS = {
     myLikedPages: '24884640167850327',

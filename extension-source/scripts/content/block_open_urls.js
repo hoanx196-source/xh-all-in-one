@@ -1,0 +1,4 @@
+(()=>{console.log("xH all in one: Block open urls ENABLED");let e=[];window.addEventListener("click",n=>{n.target.tagName==="A"&&t(n.target.href,n)}),window.fbaio_originalOpen=window.fbaio_originalOpen||window.open,window.open=(n,o,i)=>t(n,null)?window.fbaio_originalOpen?.(n,o,i):null;function t(n,o){if(!e.some(s=>s.test(n)))return!0;const r=prompt("xH all in one: Ads link detected. Are you sure you want to open this link?",n)!=null;return!r&&o&&(o.preventDefault(),o.stopPropagation?.(),o.stopImmediatePropagation?.()),r}(async()=>{const{getExtStorage:n}=await import("./helper/helper.js");e=(await n("block_open_urls_regexs")||[]).map(o=>{try{return new RegExp(o)}catch{return null}}).filter(o=>o!=null),console.log("xH all in one: block_open_urls_regexs",e),e.some(o=>o.test(window.location.href))&&confirm(`xH all in one: Ads link detected.
+
+Confirm: to close website.
+Cancel: to continue browsing this website`)&&(window.stop(),window.close())})()})();

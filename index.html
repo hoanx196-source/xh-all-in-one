@@ -24,67 +24,22 @@
 
         <script>
             (() => {
-                const xhAllowBulkPaste = event => {
-                    const key = String(event.key || '').toLowerCase();
-                    if (event.type === 'paste' || ((event.metaKey || event.ctrlKey) && key === 'v')) {
-                        event.stopImmediatePropagation();
-                    }
-                };
-                window.addEventListener('paste', xhAllowBulkPaste, true);
-                document.addEventListener('paste', xhAllowBulkPaste, true);
-                window.addEventListener('keydown', xhAllowBulkPaste, true);
-                document.addEventListener('keydown', xhAllowBulkPaste, true);
-            })();
-        </script>
-
-        <script>
-            (() => {
-	                const legacyHosts = new Set([
-	                    'fbxh-all-in-one.org',
-	                    'xh-all-in-one.org',
-	                    'fb-aio.github.io',
-	                    'fbaio.org',
-	                    'fbaio.nyna.io.vn',
-	                    'facebook-all-in-one.com',
-	                    'www.facebook-all-in-one.com',
-	                    'useful-scripts-extension.github.io'
-	                ]);
-	                const targetOrigin = window.location.origin || 'https://xh.nyna.io.vn';
-	                const currentOrigin = window.location.origin;
-	                const bulkPath = '/#/bulk-downloader';
-	                const bulkUrl = () => `${targetOrigin}${bulkPath}`;
-	                const normalizeText = value =>
-	                    String(value || '')
-	                        .normalize('NFD')
-	                        .replace(/[\u0300-\u036f]/g, '')
-	                        .replace(/đ/g, 'd')
-	                        .replace(/Đ/g, 'D')
-	                        .replace(/\s+/g, ' ')
-	                        .trim()
-	                        .toLowerCase();
-	                const isBulkDownloaderTrigger = element => {
-	                    if (!(element instanceof Element)) return false;
-	                    const node = element.closest(
-	                        'a, button, li, [role="menuitem"], .ant-menu-item, .ant-menu-submenu-title, [data-menu-id], [class*="menu-item"]'
-	                    );
-	                    const text = normalizeText(
-	                        [
-	                            element.textContent,
-	                            node?.textContent,
-	                            node?.getAttribute?.('title'),
-	                            node?.getAttribute?.('aria-label'),
-	                            node?.getAttribute?.('data-menu-id')
-	                        ]
-	                            .filter(Boolean)
-	                            .join(' ')
-	                    );
-	                    return /\b(bulk downloader|tai hang loat|tải hàng loạt)\b/i.test(text);
-	                };
-	                const normalizeLegacyUrl = value => {
-	                    if (typeof value !== 'string') return value;
-	                    try {
-	                        const url = new URL(value, currentOrigin);
-	                        if (legacyHosts.has(url.hostname)) {
+                const legacyHosts = new Set([
+                    'fbxh-all-in-one.org',
+                    'xh-all-in-one.org',
+                    'fb-aio.github.io',
+                    'fbaio.org',
+                    'fbaio.nyna.io.vn',
+                    'facebook-all-in-one.com',
+                    'www.facebook-all-in-one.com'
+                ]);
+                const targetOrigin = 'https://xh.nyna.io.vn';
+                const currentOrigin = window.location.origin;
+                const normalizeLegacyUrl = value => {
+                    if (typeof value !== 'string') return value;
+                    try {
+                        const url = new URL(value, currentOrigin);
+                        if (legacyHosts.has(url.hostname)) {
                             return `${targetOrigin}${url.pathname}${url.search}${url.hash}`;
                         }
                     } catch {
@@ -98,82 +53,24 @@
                 window.location.assign = value => originalAssign(normalizeLegacyUrl(value));
                 window.location.replace = value => originalReplace(normalizeLegacyUrl(value));
                 window.open = (value, ...args) => originalOpen(normalizeLegacyUrl(value), ...args);
-
-                const rewriteLegacyHref = anchor => {
-                    if (!(anchor instanceof HTMLAnchorElement)) return;
-                    const href = anchor.getAttribute('href');
-                    const normalizedHref = normalizeLegacyUrl(href || '');
-                    if (normalizedHref && normalizedHref !== href) {
-                        anchor.setAttribute('href', normalizedHref);
-                    }
-                };
-
-                const rewriteAllLegacyAnchors = root => {
-                    if (!root?.querySelectorAll) return;
-                    root.querySelectorAll('a[href]').forEach(rewriteLegacyHref);
-                };
-
-	                document.addEventListener(
-	                    'click',
-	                    event => {
-	                        if (isBulkDownloaderTrigger(event.target)) {
-	                            event.preventDefault();
-	                            event.stopImmediatePropagation();
-	                            window.history.pushState(null, '', bulkPath);
-	                            window.dispatchEvent(new HashChangeEvent('hashchange'));
-	                            return;
-	                        }
-	                        const anchor = event.target?.closest?.('a[href]');
-	                        if (!anchor) return;
-	                        const href = anchor.getAttribute('href') || '';
-	                        const normalizedHref = normalizeLegacyUrl(href);
-	                        if (!normalizedHref || normalizedHref === href) return;
-
+                document.addEventListener(
+                    'click',
+                    event => {
+                        const anchor = event.target?.closest?.('a[href]');
+                        if (!anchor) return;
+                        const href = anchor.getAttribute('href') || '';
+                        const normalizedHref = normalizeLegacyUrl(href);
+                        if (!normalizedHref || normalizedHref === href) return;
                         event.preventDefault();
-                        rewriteLegacyHref(anchor);
-
+                        anchor.setAttribute('href', normalizedHref);
                         if (anchor.target === '_blank') {
                             window.open(normalizedHref, anchor.target, anchor.rel || undefined);
                             return;
                         }
-
                         window.location.href = normalizedHref;
                     },
-	                    true
-	                );
-
-	                ['pointerdown', 'mousedown', 'touchstart', 'keydown'].forEach(type => {
-	                    document.addEventListener(
-	                        type,
-	                        event => {
-	                            const key = String(event.key || '').toLowerCase();
-	                            const isKeyboardActivation = type === 'keydown' && (key === 'enter' || key === ' ');
-	                            if (type === 'keydown' && !isKeyboardActivation) return;
-	                            if (!isBulkDownloaderTrigger(event.target)) return;
-	                            const anchor = event.target?.closest?.('a[href]');
-	                            if (anchor) anchor.setAttribute('href', bulkUrl());
-	                        },
-	                        true
-	                    );
-	                });
-
-                const observer = new MutationObserver(mutations => {
-                    mutations.forEach(mutation => {
-                        mutation.addedNodes.forEach(node => {
-                            if (node instanceof HTMLAnchorElement) {
-                                rewriteLegacyHref(node);
-                            } else if (node instanceof Element) {
-                                rewriteAllLegacyAnchors(node);
-                            }
-                        });
-                    });
-                });
-
-                document.addEventListener('DOMContentLoaded', () => {
-                    rewriteAllLegacyAnchors(document);
-                    observer.observe(document.documentElement, { childList: true, subtree: true });
-                });
-
+                    true
+                );
                 window.addEventListener(
                     'beforeunload',
                     event => {
@@ -592,7 +489,7 @@
                 }
             }
         </style>
-      <script type="module" crossorigin src="./src/ZQcttVra-v20260709-10.js?v=bulk-direct-20260709-11"></script>
+      <script type="module" crossorigin src="./src/ZQcttVra.js?v=rollback-20260710-1"></script>
       <link rel="modulepreload" crossorigin href="./libs/Co2HKlK5.js">
       <link rel="modulepreload" crossorigin href="./libs/BqUCZHEx.js">
       <link rel="modulepreload" crossorigin href="./libs/B3ZIOLOa.js">
@@ -659,7 +556,7 @@
       <link rel="modulepreload" crossorigin href="./libs/Yp-2ZFTc.js">
       <link rel="modulepreload" crossorigin href="./libs/pKXmQXW3.js">
       <link rel="stylesheet" crossorigin href="./assets/style-CWv7CwdX.css">
-    <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js?v=bulk-direct-20260709-11"></script></head>
+    <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js?v=rollback-20260710-1"></script></head>
 
     <body style="margin: 0; padding: 0">
         <!--[if IE]>
@@ -1505,7 +1402,7 @@
                                 Bộ công cụ Facebook downloader, dọn dữ liệu và quản lý nội dung. Tài khoản đang ở trạng thái VIP, toàn bộ quyền đã được mở.
                             </p>
                             <div class="xh-dashboard-actions">
-                                <a class="xh-dashboard-action primary" href="https://xh.nyna.io.vn/#/bulk-downloader"><i class="fa-solid fa-arrows-down-to-line"></i>Bulk Downloader</a>
+                                <a class="xh-dashboard-action primary" href="#/bulk-downloader"><i class="fa-solid fa-arrows-down-to-line"></i>Bulk Downloader</a>
                                 <a class="xh-dashboard-action" href="#/activities"><i class="fa-solid fa-broom"></i>Clean Facebook</a>
                                 <a class="xh-dashboard-action" href="${window.XH_BRAND.facebook}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i>Hỗ trợ</a>
                             </div>
